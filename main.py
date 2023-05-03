@@ -21,9 +21,13 @@ from selenium.webdriver.chrome.options import Options
 from datetime import datetime
 import dateutil.relativedelta
 import pandas as pd
-import urllib
+import os
+import sys
+import urllib.request
 # from sqlalchemy import create_engine
 import random
+import shutil
+import pyautogui
 
 
 # @ Driver
@@ -35,18 +39,27 @@ DRIVER_PATH = './chromedriver'
 chromedriver = webdriver.Chrome(executable_path=DRIVER_PATH)
 
 
-# 設置 Chrome 瀏覽器
-driver = webdriver.Chrome()
-
-# 設置等待時間
-wait = WebDriverWait(driver, 10)
-
-# 前往GU網站
-driver.get('https://www.gu-global.com/tw/zh_TW/women_printT.html')
+# # 設置 Chrome 瀏覽器
+# driver = webdriver.Chrome()
+#
+# # 設置等待時間
+# wait = WebDriverWait(driver, 10)
+#
+# # 前往GU網站
+# driver.get('https://www.gu-global.com/tw/zh_TW/women_printT.html')
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+
+
+def createOrDelDir(dirName):
+    if(os.path.exists(dirName)):
+        shutil.rmtree(dirName)
+        os.mkdir(dirName)
+    else:
+        os.mkdir(dirName)
+
 
 def listDetail():
     try:
@@ -66,9 +79,38 @@ def listDetail():
         print(e)
 
 
+def downPic(url):
+    try:
+        # print(url)
+        # chromedriver.switch_to.window(chromedriver.window_handles[1])
+        url.click()
+        # detailWeb = chromedriver.get(url)
+        time.sleep(2)
+        a = url.text
+        productTitle = url.find_element(By.CLASS_NAME,'gu-product-detail-list-title').text
+        createOrDelDir(productTitle)
+
+        productImgListUl = url.find_elements(By.CLASS_NAME,'sku-li')
+        productCode = ''
+        fileName = ''
+        for li in productImgListUl:
+            imgUrl = li.find_element(By.CSS_SELECTOR,'img.sku-img')
+            img = imgUrl.get_attribute('src')
+            fileName = img.split('/')[-1]
+            productCode = img.split('test/')[1].split('/')[0]
+            fileName = productTitle+'/'+productCode+'_'+fileName
+
+            # urllib.request.urlretrieve(img,productTitle+'.png')
+            urllib.request.urlretrieve(img,fileName)
+
+        # chromedriver.back()
+
+    except Exception as e:
+        print(e)
+
 def listProductCode():
     try:
-        productListWeb = chromedriver.get("https://www.gu-global.com/tw/zh_TW/women_jacket.html")
+        productListWeb = chromedriver.get('https://www.gu-global.com/tw/zh_TW/women_jacket.html')
         # products = wait.until(chromedriver.presence_of_all_elements_located((By.CSS_SELECTOR, '.product-item__body')))
         productList = []
         dict = {}
@@ -77,6 +119,9 @@ def listProductCode():
             productUrl = product.find_element(By.CSS_SELECTOR,'a.product-herf')
             url = productUrl.get_attribute('href')
             productText = product.text
+            downPic(productUrl)
+            # downPic(url)
+
             if(productText.count('\n')==1):
                 productName,productPrice = productText.split('\n')
             else:
@@ -91,13 +136,12 @@ def listProductCode():
 
 
 
-
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     startTime = time.time()
     print("try to get web")
     # web = None
-    listDetail()
+    # listDetail()
     listProductCode()
 
     try:
