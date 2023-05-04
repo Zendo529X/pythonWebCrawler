@@ -59,8 +59,8 @@ for code in productcode:
 
     #@ Open Website
     try:
-        # chromedriver.get('https://unipass.customs.go.kr/ets/index_eng.do')
-        chromedriver.get('https://www.uniqlo.com/tw/zh_TW/')
+        chromedriver.get('https://unipass.customs.go.kr/ets/index_eng.do')
+        # chromedriver.get('https://www.uniqlo.com/tw/zh_TW/')
         print("Current URL:"+chromedriver.current_url)
     except Exception as e:
         print('捕捉錯誤資訊: '+ str(e))
@@ -68,7 +68,7 @@ for code in productcode:
 
     #@ Click and to another page
     try:
-        h1 = chromedriver.find_element(By.XPA, '//*[@id="maincont"]/div/article/ul/li[4]/a')
+        h1 = chromedriver.find_element(By.XPATH, '//*[@id="maincont"]/div/article/ul/li[4]/a')
         print("Change to another page:"+h1.text)
         h1.click()
         time.sleep(random.randint(1,4))
