@@ -81,16 +81,14 @@ def listDetail():
 
 def downPic(url):
     try:
-        # print(url)
+        print(url)
         # chromedriver.switch_to.window(chromedriver.window_handles[1])
-        url.click()
-        # detailWeb = chromedriver.get(url)
+        detailWeb = chromedriver.get(url)
         time.sleep(2)
-        a = url.text
-        productTitle = url.find_element(By.CLASS_NAME,'gu-product-detail-list-title').text
+        productTitle = chromedriver.find_element(By.CLASS_NAME,'gu-product-detail-list-title').text
         createOrDelDir(productTitle)
 
-        productImgListUl = url.find_elements(By.CLASS_NAME,'sku-li')
+        productImgListUl = chromedriver.find_elements(By.CLASS_NAME,'sku-li')
         productCode = ''
         fileName = ''
         for li in productImgListUl:
@@ -103,14 +101,17 @@ def downPic(url):
             # urllib.request.urlretrieve(img,productTitle+'.png')
             urllib.request.urlretrieve(img,fileName)
 
-        # chromedriver.back()
+        chromedriver.back()
 
     except Exception as e:
         print(e)
 
-def listProductCode():
+def listProductCode(url):
+    print(url)
     try:
-        productListWeb = chromedriver.get('https://www.gu-global.com/tw/zh_TW/women_jacket.html')
+        # productListWeb = chromedriver.get('https://www.gu-global.com/tw/zh_TW/women_jacket.html')
+        productListWeb = chromedriver.get(url)
+        time.sleep(3)
         # products = wait.until(chromedriver.presence_of_all_elements_located((By.CSS_SELECTOR, '.product-item__body')))
         productList = []
         dict = {}
@@ -119,7 +120,6 @@ def listProductCode():
             productUrl = product.find_element(By.CSS_SELECTOR,'a.product-herf')
             url = productUrl.get_attribute('href')
             productText = product.text
-            downPic(productUrl)
             # downPic(url)
 
             if(productText.count('\n')==1):
@@ -127,12 +127,89 @@ def listProductCode():
             else:
                 productName,productPrice,text = productText.split('\n')
             print(productName+'and price is :'+productPrice)
-            productList.append({"productName":productName,"productPrice":productPrice,"Url":url})
+            productList.append({"productName":productName,"productPrice":productPrice,"url":url})
+
+        # 先加入list後 再進行撈圖
+        for prod in productList:
+            downPic(prod.get("url"))
+
+        # print(productList)
+        chromedriver.back()
+        print(123)
+    except Exception as e:
+        print(e)
+
+# useless
+#
+#
+#
+def listGenderProduct():
+    try:
+        productListWeb = chromedriver.get('https://www.gu-global.com/tw/zh_TW/')
+        # products = wait.until(chromedriver.presence_of_all_elements_located((By.CSS_SELECTOR, '.product-item__body')))
+        genderProductList = []
+        dict = {}
+        genderTabProducts = chromedriver.find_elements(By.CLASS_NAME,'genderTab')
+        genderTabProducts = chromedriver.find_elements(By.XPATH,'/html/body/div[2]/div/div[1]/div[3]/div/div/div[1]/div/div')
+        for product in genderTabProducts:
+            productUrl = product.find_element(By.TAG_NAME,'a')
+            url = productUrl.get_attribute('href')
+            productText = product.text
+            # downPic(url)
+            print(url)
+            print(productText)
+
+            # if(productText.count('\n')==1):
+            #     productName,productPrice = productText.split('\n')
+            # else:
+            #     productName,productPrice,text = productText.split('\n')
+            # print(productName+'and price is :'+productPrice)
+            # productList.append({"productName":productName,"productPrice":productPrice,"url":url})
+
+        # 先加入list後 再進行撈圖
+        # for prod in productList:
+        #     downPic(prod.get("url"))
 
         # print(productList)
         print(123)
     except Exception as e:
         print(e)
+#
+#
+#
+#
+
+def GUstart():
+    womenUrl = 'https://www.gu-global.com/tw/zh_TW/L1_women.html'
+    menUrl = 'https://www.gu-global.com/tw/zh_TW/L1_men.html'
+    kidUrl = 'https://www.gu-global.com/tw/zh_TW/L1_kids.html'
+    genderList = [womenUrl,menUrl,kidUrl]
+    genderCategoryProductList = []
+    for i in genderList:
+        genderCategoryProductList = listGenderCategory(i)
+        if len(genderCategoryProductList) > 0:
+            for url in genderCategoryProductList:
+                listProductCode(url)
+        genderCategoryProductList.clear()
+
+
+
+
+def listGenderCategory(genderUrl):
+    print(genderUrl)
+    genderWeb = chromedriver.get(genderUrl)
+    categoryLists = chromedriver.find_elements(By.CLASS_NAME,'bd_categories_item')
+    categoryUrlList = []
+    try:
+        for category in categoryLists:
+            categoryItem = category.find_element(By.TAG_NAME,'a')
+            categoryUrl = categoryItem.get_attribute('href')
+            print(categoryUrl)
+            categoryUrlList.append(categoryUrl)
+    except Exception as e:
+        print(e)
+
+    return categoryUrlList
 
 
 
@@ -142,6 +219,8 @@ if __name__ == '__main__':
     print("try to get web")
     # web = None
     # listDetail()
+    GUstart()
+    listGenderProduct()
     listProductCode()
 
     try:
