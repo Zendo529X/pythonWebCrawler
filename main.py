@@ -38,6 +38,8 @@ DRIVER_PATH = './chromedriver'
 # chromedriver = webdriver.Chrome(options=options, executable_path=DRIVER_PATH)
 chromedriver = webdriver.Chrome(executable_path=DRIVER_PATH)
 
+# GU DIR
+GUDIR = 'gu'
 
 # # 設置 Chrome 瀏覽器
 # driver = webdriver.Chrome()
@@ -86,6 +88,8 @@ def downPic(url):
         detailWeb = chromedriver.get(url)
         time.sleep(2)
         productTitle = chromedriver.find_element(By.CLASS_NAME,'gu-product-detail-list-title').text
+        createOrDelDir(GUDIR)
+        productTitle = GUDIR + '/' + productTitle
         createOrDelDir(productTitle)
 
         productImgListUl = chromedriver.find_elements(By.CLASS_NAME,'sku-li')
