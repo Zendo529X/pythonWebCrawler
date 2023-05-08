@@ -101,7 +101,7 @@ def downPic(url):
             # urllib.request.urlretrieve(img,productTitle+'.png')
             urllib.request.urlretrieve(img,fileName)
 
-        chromedriver.back()
+        # chromedriver.back()
 
     except Exception as e:
         print(e)
@@ -134,7 +134,8 @@ def listProductCode(url):
             downPic(prod.get("url"))
 
         # print(productList)
-        chromedriver.back()
+        # chromedriver.back()
+        # chromedriver.close()
         print(123)
     except Exception as e:
         print(e)
@@ -190,7 +191,7 @@ def GUstart():
         if len(genderCategoryProductList) > 0:
             for url in genderCategoryProductList:
                 listProductCode(url)
-        genderCategoryProductList.clear()
+        # genderCategoryProductList.clear()
 
 
 
