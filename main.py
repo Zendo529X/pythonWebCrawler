@@ -24,10 +24,9 @@ import pandas as pd
 import os
 import sys
 import urllib.request
-# from sqlalchemy import create_engine
-import random
-import shutil
-import pyautogui
+from service.WebCrawlerService import *
+
+webCrawlerService = WebCrawlerService()
 
 # @ Driver
 DRIVER_PATH = './chromedriver'
@@ -147,49 +146,6 @@ def listProductCode(url):
         print(e)
 
 
-# useless
-#
-#
-#
-def listGenderProduct():
-    try:
-        productListWeb = chromedriver.get('https://www.gu-global.com/tw/zh_TW/')
-        # products = wait.until(chromedriver.presence_of_all_elements_located((By.CSS_SELECTOR, '.product-item__body')))
-        genderProductList = []
-        dict = {}
-        genderTabProducts = chromedriver.find_elements(By.CLASS_NAME, 'genderTab')
-        genderTabProducts = chromedriver.find_elements(By.XPATH,
-                                                       '/html/body/div[2]/div/div[1]/div[3]/div/div/div[1]/div/div')
-        for product in genderTabProducts:
-            productUrl = product.find_element(By.TAG_NAME, 'a')
-            url = productUrl.get_attribute('href')
-            productText = product.text
-            # downPic(url)
-            print(url)
-            print(productText)
-
-            # if(productText.count('\n')==1):
-            #     productName,productPrice = productText.split('\n')
-            # else:
-            #     productName,productPrice,text = productText.split('\n')
-            # print(productName+'and price is :'+productPrice)
-            # productList.append({"productName":productName,"productPrice":productPrice,"url":url})
-
-        # 先加入list後 再進行撈圖
-        # for prod in productList:
-        #     downPic(prod.get("url"))
-
-        # print(productList)
-        print(123)
-    except Exception as e:
-        print(e)
-
-
-#
-#
-#
-#
-
 def GUstart():
     womenUrl = 'https://www.gu-global.com/tw/zh_TW/L1_women.html'
     menUrl = 'https://www.gu-global.com/tw/zh_TW/L1_men.html'
@@ -228,38 +184,7 @@ if __name__ == '__main__':
     # web = None
     # listDetail()
     GUstart()
-    listGenderProduct()
-    listProductCode()
-
-    try:
-        web = chromedriver.get("https://www.gu-global.com/tw/zh_TW/L1_women.html")
-        # //*[@id="hmall-container"]/div/div[1]/div[1]/div/div/header/div/div[2]/ul/li[2]/a
-        # //*[@id="hmall-container"]/div/div[1]/div[3]/div/div/div[3]/ul/li
-
-        # /html/body/div[2]/div/div[1]/div[3]/div/div/div[1]/div/div/a[2]
-        # // *[ @ id = "hmall-container"] / div / div[1] / div[3] / div / div / div[2] / div[3] / ul / li[1] / a / img
-    except Exception as e:
-        print(e)
-
-    try:
-        1
-        # list = chromedriver.find_element(By.XPATH,'// *[ @ id = "hmall-container"] / div / div[1] / div[3] / div / div / div[2] / div[3] / ul ')
-        # list = chromedriver.find_elements(By.ID,"bd_categories")
-        # items = list.find_elements(By.TAG_NAME,'li')
-        # for l in list:
-        #     print(l.get_attribute(href))
-
-    except Exception as e:
-        print(e)
-
-    # soup = BeautifulSoup(r.text, "html.parser")
-    # print(soup.prettify())
-    # hmall = soup.findAll("div", {"id": "hmall-container"})
-    # print(hmall[0])
-    # selected = hmall
-
-    for s in selected:
-        print(s["href"], s.text)
-    # print(r.text)
+    # listGenderProduct()
+    # listProductCode()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
