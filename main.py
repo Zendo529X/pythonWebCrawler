@@ -29,12 +29,12 @@ from service.WebCrawlerService import *
 webCrawlerService = WebCrawlerService()
 
 # @ Driver
-DRIVER_PATH = './chromedriver'
+# DRIVER_PATH = './chromedriver'
 # options = Options()
 # options.headless = True
 # options.add_argument("--window-size=1920,1200")
 # chromedriver = webdriver.Chrome(options=options, executable_path=DRIVER_PATH)
-chromedriver = webdriver.Chrome(executable_path=DRIVER_PATH)
+# chromedriver = webdriver.Chrome(executable_path=DRIVER_PATH)
 
 # GU DIR
 GUDIR = 'gu'
@@ -181,9 +181,10 @@ def listGenderCategory(genderUrl):
 if __name__ == '__main__':
     startTime = time.time()
     print("try to get web")
+    webCrawlerService.webCraw('GU')
     # web = None
     # listDetail()
-    GUstart()
+    # GUstart()
     # listGenderProduct()
     # listProductCode()
 
